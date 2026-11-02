@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b2d">
+<title>إدارة متجر أبو علي</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma,Arial,sans-serif;
+  background:#f3f5f0;
+  color:#18372a
+}
+header{
+  background:linear-gradient(130deg,#102c21,#286246);
+  color:white;
+  padding:24px 5%
+}
+header h1{margin:0 0 8px;font-size:25px}
+header p{margin:0;color:#d7e5dc;font-size:13px}
+main{max-width:1100px;margin:25px auto;padding:0 15px}
+.card{
+  background:white;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 5px 20px #18372a0c
+}
+h2{font-size:20px;margin:0 0 16px}
+h3{font-size:16px}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #dbe3dc;
+  border-radius:10px;
+  font:inherit;
+  margin:6px 0 12px;
+  background:white
+}
+label{font-size:13px;font-weight:bold}
+button{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  font:inherit;
+  cursor:pointer
+}
+.primary{background:#17412e;color:white}
+.secondary{background:#edf2ed;color:#17412e}
+.danger{background:#a83232;color:white}
+.success{background:#16834a;color:white}
+button:disabled{opacity:.5;cursor:not-allowed}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px
+}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.item{
+  border:1px solid #e4eae4;
+  border-radius:12px;
+  padding:13px;
+  margin:10px 0
+}
+.itemTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap
+}
+.muted{font-size:12px;color:#718075;line-height:1.8}
+.status{font-weight:bold;color:#286246}
+#loginArea{max-width:450px;margin:35px auto}
+#dashboard{display:none}
+#message{font-size:13px;margin-top:10px}
+.hidden{display:none!important}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+  header h1{font-size:21px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>لوحة إدارة متجر أبو علي</h1>
+  <p>محمد نور العبيد · أبو علي لتجارة المواد الغذائية</p>
+</header>
+
+<main>
+
+<!-- تسجيل الدخول بكلمة مرور فقط -->
+<section id="loginArea" class="card">
+  <h2>دخول الإدارة</h2>
+
+  <label for="password">كلمة المرور</label>
+  <input
+    id="password"
+    type="password"
+    autocomplete="current-password"
+    placeholder="أدخل كلمة المرور"
+  >
+
+  <button class="primary" id="loginBtn" style="width:100%">
+    تسجيل الدخول
+  </button>
+
+  <p id="loginMessage" class="muted"></p>
+</section>
+
+
+<!-- لوحة التحكم -->
+<section id="dashboard">
+
+  <div class="card">
+    <div class="itemTop">
+      <div>
+        <h2>أهلاً بك بالإدارة</h2>
+        <p class="muted">إدارة منتجات وطلبات متجر أبو علي</p>
+      </div>
+
+      <button class="secondary" id="logoutBtn">
+        تسجيل الخروج
+      </button>
+    </div>
+  </div>
+
+
+  <!-- إضافة وتعديل المنتجات -->
+  <div class="card">
+    <h2 id="formTitle">إضافة منتج جديد</h2>
+
+    <label for="productName">اسم المنتج</label>
+    <input id="productName" placeholder="مثلاً: جبنة موزاريلا">
+
+    <div class="grid">
+      <div>
+        <label for="productCategory">التصنيف</label>
+        <select id="productCategory">
+          <option>لحوم مبردة</option>
+          <option>أجبان</option>
+          <option>معلبات</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="productUnit">وحدة البيع</label>
+        <input id="productUnit" value="كغ" placeholder="كغ، علبة، قطعة">
+      </div>
+    </div>
+
+    <label for="productEmoji">رمز المنتج</label>
+    <input id="productEmoji" value="🥫" placeholder="🥫">
+
+    <label for="productImage">رابط صورة المنتج (اختياري)</label>
+    <input
+      id="productImage"
+      type="url"
+      placeholder="https://example.com/image.jpg"
+    >
+
+    <label>
+      <input
+        id="productActive"
+        type="checkbox"
+        checked
+        style="width:auto;margin-left:7px"
+      >
+      إظهار المنتج للزبائن
+    </label>
+
+    <div class="actions" style="margin-top:15px">
+      <button class="primary" id="saveProductBtn">
+        إضافة المنتج
+      </button>
+
+      <button class="secondary hidden" id="cancelEditBtn">
+        إلغاء التعديل
+      </button>
+    </div>
+
+    <p id="productMessage" class="muted"></p>
+  </div>
+
+
+  <!-- قائمة المنتجات -->
+  <div class="card">
+    <div class="itemTop">
+      <h2>إدارة المنتجات</h2>
+
+      <button class="secondary" id="reloadProductsBtn">
+        تحديث المنتجات
+      </button>
+    </div>
+
+    <div id="productsList">
+      <p class="muted">جاري تحميل المنتجات...</p>
+    </div>
+  </div>
+
+
+  <!-- الطلبات -->
+  <div class="card">
+    <div class="itemTop">
+      <h2>الطلبات الواردة</h2>
+
+      <button class="secondary" id="reloadOrdersBtn">
+        تحديث الطلبات
+      </button>
+    </div>
+
+    <div id="ordersList">
+      <p class="muted">جاري تحميل الطلبات...</p>
+    </div>
+  </div>
+
+</section>
+</main>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+/* إعدادات مشروع متجر أبو علي */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAP8OqppdITlq9gcVGdQVN2nTJ_dFWEjlU",
+  authDomain: "abu-ali-store.firebaseapp.com",
+  projectId: "abu-ali-store",
+  storageBucket: "abu-ali-store.firebasestorage.app",
+  messagingSenderId: "997695572931",
+  appId: "1:997695572931:web:e1bed00861114263f98b76"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+
+const productsCol = collection(db, "products");
+const ordersCol = collection(db, "orders");
+
+let isAdmin = false;
+let editingId = null;
+
+
+/* كلمة المرور وبريد الإدارة الداخلي */
+
+const ADMIN_EMAIL = "ali.mo.alobaid@gmail.com";
+const ADMIN_PASSWORD = "19792007";
+
+
+/* حماية النصوص المعروضة */
+
+function safe(value){
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[ch]));
+}
+
+
+/* رسائل الإدارة */
+
+function showMessage(id, message){
+  $(id).textContent = message;
+}
+
+
+/* التحقق من صلاحية الإدارة */
+
+async function verifyAdmin(user){
+
+  isAdmin = false;
+  $("dashboard").style.display = "none";
+
+  if(!user){
+    $("loginArea").style.display = "block";
+    return false;
+  }
+
+  try{
+    const adminRef = doc(db, "admins", user.uid);
+    const adminSnap = await getDoc(adminRef);
+
+    if(
+      adminSnap.exists() &&
+      adminSnap.data().enabled === true
+    ){
+      isAdmin = true;
+
+      $("loginArea").style.display = "none";
+      $("dashboard").style.display = "block";
+
+      await loadProducts();
+      await loadOrders();
+
+      return true;
+    }
+
+    await signOut(auth);
+
+    $("loginArea").style.display = "block";
+
+    showMessage(
+      "loginMessage",
+      "هذا الحساب غير مخوّل للدخول إلى الإدارة."
+    );
+
+    return false;
+
+  }catch(error){
+    console.error(error);
+
+    showMessage(
+      "loginMessage",
+      "تعذر التحقق من صلاحية الإدارة. تحقق من قواعد Firestore."
+    );
+
+    return false;
+  }
+}
+
+
+/* تسجيل الدخول بكلمة مرور فقط */
+
+$("loginBtn").addEventListener("click", async ()=>{
+
+  const password = $("password").value;
+
+  if(!password){
+    showMessage("loginMessage","أدخل كلمة المرور.");
+    return;
+  }
+
+  if(password !== ADMIN_PASSWORD){
+    showMessage("loginMessage","كلمة المرور غير صحيحة.");
+    $("password").value = "";
+    return;
+  }
+
+  $("loginBtn").disabled = true;
+  showMessage("loginMessage","جاري تسجيل الدخول...");
+
+  try{
+    await signInWithEmailAndPassword(
+      auth,
+      ADMIN_EMAIL,
+      ADMIN_PASSWORD
+    );
+  }catch(error){
+    console.error(error);
+
+    showMessage(
+      "loginMessage",
+      "تعذر الدخول. تأكد أن كلمة مرور حساب Firebase هي 1979."
+    );
+  }
+
+  $("loginBtn").disabled = false;
+});
+
+
+/* السماح بالدخول عبر زر Enter */
+
+$("password").addEventListener("keydown", event=>{
+  if(event.key === "Enter"){
+    $("loginBtn").click();
+  }
+});
+
+
+/* تسجيل الخروج */
+
+$("logoutBtn").addEventListener("click", async ()=>{
+  await signOut(auth);
+  $("password").value = "";
+});
+
+
+/* متابعة حالة تسجيل الدخول */
+
+onAuthStateChanged(auth, user=>{
+  verifyAdmin(user);
+});
+
+
+/* تحميل المنتجات */
+
+async function loadProducts(){
+
+  if(!isAdmin) return;
+
+  $("productsList").innerHTML =
+    "<p class='muted'>جاري تحميل المنتجات...</p>";
+
+  try{
+
+    const snap = await getDocs(productsCol);
+
+    const products = snap.docs.map(d=>({
+      id:d.id,
+      ...d.data()
+    }));
+
+    if(!products.length){
+      $("productsList").innerHTML =
+        "<p class='muted'>لا توجد منتجات. أضف أول منتج من الأعلى.</p>";
+      return;
+    }
+
+    $("productsList").innerHTML = products.map(p=>`
+
+      <div class="item">
+        <div class="itemTop">
+          <div>
+            <b>${safe(p.emoji || "🥫")} ${safe(p.name)}</b>
+
+            <div class="muted">
+              ${safe(p.category)} · ${safe(p.unit || "وحدة")}
+            </div>
+
+            <div class="muted">
+              ${p.active === false ? "مخفي عن الزبائن" : "ظاهر للزبائن"}
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="secondary" data-edit="${p.id}">
+              تعديل
+            </button>
+
+            <button class="secondary" data-toggle="${p.id}">
+              ${p.active === false ? "إظهار" : "إخفاء"}
+            </button>
+
+            <button class="danger" data-delete="${p.id}">
+              حذف
+            </button>
+          </div>
+        </div>
+      </div>
+
+    `).join("");
+
+  }catch(error){
+    console.error(error);
+
+    $("productsList").innerHTML =
+      "<p class='muted'>تعذر تحميل المنتجات. تحقق من قواعد Firestore.</p>";
+  }
+}
+
+
+/* إضافة منتج أو حفظ التعديل */
+
+$("saveProductBtn").addEventListener("click", async ()=>{
+
+  if(!isAdmin) return;
+
+  const name = $("productName").value.trim();
+
+  if(!name){
+    showMessage("productMessage","اكتب اسم المنتج أولاً.");
+    return;
+  }
+
+  const data = {
+    name,
+    category: $("productCategory").value,
+    unit: $("productUnit").value.trim() || "وحدة",
+    emoji: $("productEmoji").value.trim() || "🥫",
+    image: $("productImage").value.trim(),
+    active: $("productActive").checked
+  };
+
+  $("saveProductBtn").disabled = true;
+
+  try{
+
+    if(editingId){
+
+      await updateDoc(
+        doc(db,"products",editingId),
+        data
+      );
+
+      showMessage("productMessage","تم تعديل المنتج بنجاح.");
+
+    }else{
+
+      await addDoc(productsCol,{
+        ...data,
+        createdAt:serverTimestamp()
+      });
+
+      showMessage("productMessage","تمت إضافة المنتج بنجاح.");
+    }
+
+    resetForm();
+    await loadProducts();
+
+  }catch(error){
+    console.error(error);
+
+    showMessage(
+      "productMessage",
+      "تعذر حفظ المنتج. تحقق من قواعد Firestore."
+    );
+  }
+
+  $("saveProductBtn").disabled = false;
+});
+
+
+/* تعديل المنتج أو إخفاؤه أو حذفه */
+
+$("productsList").addEventListener("click", async event=>{
+
+  const button = event.target.closest(
+    "[data-edit],[data-toggle],[data-delete]"
+  );
+
+  if(!button || !isAdmin) return;
+
+  const id =
+    button.dataset.edit ||
+    button.dataset.toggle ||
+    button.dataset.delete;
+
+  try{
+
+    /* تعديل المنتج */
+
+    if(button.dataset.edit){
+
+      const snap = await getDoc(doc(db,"products",id));
+
+      if(!snap.exists()) return;
+
+      const p = snap.data();
+
+      editingId = id;
+
+      $("productName").value = p.name || "";
+      $("productCategory").value = p.category || "أجبان";
+      $("productUnit").value = p.unit || "كغ";
+      $("productEmoji").value = p.emoji || "🥫";
+      $("productImage").value = p.image || "";
+      $("productActive").checked = p.active !== false;
+
+      $("formTitle").textContent = "تعديل المنتج";
+      $("saveProductBtn").textContent = "حفظ التعديل";
+      $("cancelEditBtn").classList.remove("hidden");
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+    }
+
+
+    /* إظهار أو إخفاء المنتج */
+
+    if(button.dataset.toggle !== undefined){
+
+      const snap = await getDoc(doc(db,"products",id));
+
+      if(!snap.exists()) return;
+
+      const current = snap.data().active !== false;
+
+      await updateDoc(
+        doc(db,"products",id),
+        {active:!current}
+      );
+
+      await loadProducts();
+    }
+
+
+    /* حذف المنتج */
+
+    if(button.dataset.delete !== undefined){
+
+      if(confirm("هل أنت متأكد من حذف المنتج؟")){
+
+        await deleteDoc(doc(db,"products",id));
+
+        await loadProducts();
+      }
+    }
+
+  }catch(error){
+    console.error(error);
+    alert("تعذر تنفيذ العملية. تحقق من صلاحيات الإدارة.");
+  }
+});
+
+
+/* إعادة ضبط نموذج المنتج */
+
+function resetForm(){
+
+  editingId = null;
+
+  $("productName").value = "";
+  $("productCategory").value = "لحوم مبردة";
+  $("productUnit").value = "كغ";
+  $("productEmoji").value = "🥫";
+  $("productImage").value = "";
+  $("productActive").checked = true;
+
+  $("formTitle").textContent = "إضافة منتج جديد";
+  $("saveProductBtn").textContent = "إضافة المنتج";
+  $("cancelEditBtn").classList.add("hidden");
+}
+
+
+/* إلغاء التعديل */
+
+$("cancelEditBtn").addEventListener("click",resetForm);
+
+
+/* تحديث المنتجات */
+
+$("reloadProductsBtn").addEventListener("click",loadProducts);
+
+
+/* تحميل الطلبات */
+
+async function loadOrders(){
+
+  if(!isAdmin) return;
+
+  $("ordersList").innerHTML =
+    "<p class='muted'>جاري تحميل الطلبات...</p>";
+
+  try{
+
+    const snap = await getDocs(
+      query(ordersCol,orderBy("createdAt","desc"))
+    );
+
+    const orders = snap.docs.map(d=>({
+      id:d.id,
+      ...d.data()
+    }));
+
+    if(!orders.length){
+      $("ordersList").innerHTML =
+        "<p class='muted'>لا توجد طلبات حالياً.</p>";
+      return;
+    }
+
+    $("ordersList").innerHTML = orders.map(o=>`
+
+      <div class="item">
+
+        <div class="itemTop">
+          <div>
+            <b>${safe(o.shop || "طلب بدون اسم")}</b>
+
+            <div class="muted">
+              المنطقة: ${safe(o.address || "غير محددة")}
+            </div>
+
+            <div class="muted">
+              ${(o.items || []).map(item=>
+                safe(item.name) +
+                " × " +
+                safe(item.quantity) +
+                " " +
+                safe(item.unit || "")
+              ).join("، ")}
+            </div>
+
+            <div class="muted">
+              ملاحظة: ${safe(o.note || "لا توجد")}
+            </div>
+          </div>
+
+          <div>
+            <label>حالة الطلب</label>
+
+            <select data-order-status="${o.id}">
+              <option ${o.status==="جديد"?"selected":""}>جديد</option>
+              <option ${o.status==="قيد التجهيز"?"selected":""}>قيد التجهيز</option>
+              <option ${o.status==="تم التسليم"?"selected":""}>تم التسليم</option>
+              <option ${o.status==="ملغي"?"selected":""}>ملغي</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+    `).join("");
+
+  }catch(error){
+    console.error(error);
+
+    $("ordersList").innerHTML =
+      "<p class='muted'>تعذر تحميل الطلبات. تحقق من قواعد Firestore.</p>";
+  }
+}
+
+
+/* تحديث حالة الطلب */
+
+$("ordersList").addEventListener("change",async event=>{
+
+  const select = event.target.closest("[data-order-status]");
+
+  if(!select || !isAdmin) return;
+
+  try{
+
+    await updateDoc(
+      doc(db,"orders",select.dataset.orderStatus),
+      {status:select.value}
+    );
+
+  }catch(error){
+    console.error(error);
+    alert("تعذر تحديث حالة الطلب.");
+  }
+});
+
+
+/* تحديث الطلبات */
+
+$("reloadOrdersBtn").addEventListener("click",loadOrders);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>شركة محمد نور العبيد للتجارة</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #176b45;
+      --green-dark: #104b31;
+      --green-light: #e8f4ed;
+      --bg: #f5f7f5;
+      --text: #20372b;
+      --muted: #77847b;
+      --border: #e4eae5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: white;
+      padding: 25px 16px;
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(20px, 4vw, 29px);
+      font-weight: 800;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      opacity: .9;
+    }
+
+    .shipping {
+      background: #ffffff20;
+      border: 1px solid #ffffff35;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    main {
+      max-width: 1150px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .intro {
+      margin-bottom: 20px;
+    }
+
+    .intro h2 {
+      margin: 0 0 5px;
+      font-size: 23px;
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      flex: 1;
+      min-width: 180px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .toolbar input:focus,
+    .toolbar select:focus {
+      border-color: var(--green);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px #0000000a;
+    }
+
+    .product-image {
+      height: 165px;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-placeholder {
+      font-size: 55px;
+    }
+
+    .product-info {
+      padding: 15px;
+    }
+
+    .product-category {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-info h3 {
+      margin: 0 0 13px;
+      font-size: 17px;
+    }
+
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f3f6f3;
+      border-radius: 10px;
+      padding: 5px;
+    }
+
+    .quantity-controls button {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: var(--green);
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .quantity-controls span {
+      min-width: 18px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .add-btn {
+      border: none;
+      border-radius: 10px;
+      background: var(--green);
+      color: white;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .add-btn:hover {
+      background: var(--green-dark);
+    }
+
+    .cart-panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .cart-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cart-title h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .cart-count {
+      background: var(--green-light);
+      color: var(--green);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .cart-items {
+      margin: 15px 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+    }
+
+    .cart-item small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .remove-btn {
+      border: none;
+      background: #fff0ef;
+      color: #b42318;
+      border-radius: 9px;
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 22px 10px;
+      color: var(--muted);
+    }
+
+    .customer-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .customer-fields input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .customer-fields input:focus {
+      border-color: var(--green);
+    }
+
+    .customer-fields .full {
+      grid-column: 1 / -1;
+    }
+
+    .send-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 15px;
+      background: #16834a;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .send-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .whatsapp-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 10px 0 0;
+    }
+
+    .status-message {
+      padding: 25px;
+      text-align: center;
+      color: var(--muted);
+      background: white;
+      border-radius: 14px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      margin-top: 35px;
+      background: #123e2b;
+      color: white;
+      text-align: center;
+      padding: 22px 15px;
+      font-size: 13px;
+      line-height: 1.9;
+    }
+
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .product-image {
+        height: 125px;
+      }
+
+      .product-info {
+        padding: 11px;
+      }
+
+      .product-info h3 {
+        font-size: 14px;
+      }
+
+      .quantity-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .quantity-controls {
+        justify-content: center;
+      }
+
+      .add-btn {
+        width: 100%;
+      }
+
+      .customer-fields {
+        grid-template-columns: 1fr;
+      }
+
+      .customer-fields .full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <h1>شركة محمد نور العبيد للتجارة</h1>
+        <p>مواد غذائية بالجملة</p>
+      </div>
+
+      <div class="shipping">
+        🚚 يتوفر شحن لكافة المحافظات السورية
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="intro">
+      <h2>أهلاً وسهلاً بكم</h2>
+      <p>اختاروا المنتجات المطلوبة وأرسلوا طلبكم مباشرة إلى أبو علي.</p>
+    </section>
+
+    <div class="toolbar">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="ابحث عن منتج..."
+      >
+
+      <select id="categoryFilter">
+        <option value="all">جميع الأقسام</option>
+        <option value="اللحوم">اللحوم</option>
+        <option value="الأجبان">الأجبان</option>
+        <option value="المعلبات">المعلبات</option>
+      </select>
+    </div>
+
+    <section id="productsGrid" class="products-grid">
+      <div class="status-message">جاري تحميل المنتجات...</div>
+    </section>
+
+    <section class="cart-panel">
+
+      <div class="cart-title">
+        <h2>🛒 سلة الطلبات</h2>
+        <span id="cartCount" class="cart-count">0 منتج</span>
+      </div>
+
+      <div id="cartItems" class="cart-items">
+        <div class="empty-cart">السلة فارغة، اختر المنتجات أولاً.</div>
+      </div>
+
+      <div class="customer-fields">
+        <input
+          id="customerName"
+          type="text"
+          placeholder="اسم الزبون"
+          autocomplete="name"
+        >
+
+        <input
+          id="customerPhone"
+          type="tel"
+          placeholder="رقم هاتف الزبون"
+          autocomplete="tel"
+        >
+
+        <input
+          id="customerAddress"
+          class="full"
+          type="text"
+          placeholder="العنوان أو المحافظة (اختياري)"
+        >
+
+        <input
+          id="customerNote"
+          class="full"
+          type="text"
+          placeholder="ملاحظات على الطلب (اختياري)"
+        >
+      </div>
+
+      <button id="sendOrderBtn" class="send-btn" disabled>
+        إرسال الطلب عبر واتساب
+      </button>
+
+      <p class="whatsapp-note">
+        لا توجد أسعار على الموقع. سيتم فتح واتساب برسالة طلب جاهزة.
+      </p>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <strong>شركة محمد نور العبيد للتجارة</strong><br>
+    مخصص لصالح محمد نور العبيد ابو علي سوريا حماة
+  </footer>
+
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+    // إعدادات مشروع Firebase abu-ali-store
+    const firebaseConfig = {
+      apiKey: "AIzaSyAP8OqppdITlq9gcVGdQVN2nTJ_dFWEjlU",
+      authDomain: "abu-ali-store.firebaseapp.com",
+      projectId: "abu-ali-store",
+      storageBucket: "abu-ali-store.firebasestorage.app",
+      messagingSenderId: "997695572931",
+      appId: "1:997695572931:web:e1bed00861114263f98b76"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+
+    // رقم واتساب أبو علي
+    // 0933230813 يتحول إلى 963933230813
+    const WHATSAPP_NUMBER = "963933230813";
+
+
+    const productsGrid = document.getElementById("productsGrid");
+    const cartItems = document.getElementById("cartItems");
+    const cartCount = document.getElementById("cartCount");
+    const sendOrderBtn = document.getElementById("sendOrderBtn");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+
+    let products = [];
+    let cart = {};
+
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+
+    function getProductName(product) {
+      return product.name || product.title || "منتج";
+    }
+
+
+    function getProductCategory(product) {
+      return product.category || product.section || "أخرى";
+    }
+
+
+    function getProductImage(product) {
+      return product.image || product.imageUrl || product.photo || "";
+    }
+
+
+    function isProductActive(product) {
+      return product.active !== false && product.enabled !== false;
+    }
+
+
+    async function loadProducts() {
+
+      productsGrid.innerHTML =
+        '<div class="status-message">جاري تحميل المنتجات...</div>';
+
+      try {
+
+        const snapshot = await getDocs(collection(db, "products"));
+
+        products = snapshot.docs
+          .map((document) => ({
+            id: document.id,
+            ...document.data()
+          }))
+          .filter(isProductActive);
+
+        renderProducts();
+
+      } catch (error) {
+
+        console.error("Products loading error:", error);
+
+        productsGrid.innerHTML = `
+          <div class="status-message">
+            تعذر تحميل المنتجات.<br>
+            تأكد من قواعد Firestore واسم مجموعة المنتجات.
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    function renderProducts() {
+
+      const search = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+
+      const filteredProducts = products.filter((product) => {
+
+        const name = getProductName(product).toLowerCase();
+        const productCategory = getProductCategory(product);
+
+        const matchesSearch = name.includes(search);
+
+        const matchesCategory =
+          category === "all" || productCategory === category;
+
+        return matchesSearch && matchesCategory;
+
+      });
+
+
+      if (filteredProducts.length === 0) {
+
+        productsGrid.innerHTML = `
+          <div class="status-message">
+            لا توجد منتجات ضمن هذا البحث.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      productsGrid.innerHTML = filteredProducts.map((product) => {
+
+        const name = escapeHTML(getProductName(product));
+        const categoryName = escapeHTML(getProductCategory(product));
+        const image = getProductImage(product);
+        const quantity = cart[product.id] || 0;
+
+        const imageHTML = image
+          ? `<img src="${escapeHTML(image)}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+             <div class="product-placeholder" style="display:none">🛒</div>`
+          : `<div class="product-placeholder">🛒</div>`;
+
+        return `
+          <article class="product-card">
+
+            <div class="product-image">
+              ${imageHTML}
+            </div>
+
+            <div class="product-info">
+
+              <span class="product-category">
+                ${categoryName}
+              </span>
+
+              <h3>${name}</h3>
+
+              <div class="quantity-row">
+
+                <div class="quantity-controls">
+
+                  <button
+                    type="button"
+                    data-action="minus"
+                    data-id="${escapeHTML(product.id)}"
+                    aria-label="إنقاص الكمية"
+                  >−</button>
+
+                  <span>${quantity}</span>
+
+                  <button
+                    type="button"
+                    data-action="plus"
+                    data-id="${escapeHTML(product.id)}"
+                    aria-label="زيادة الكمية"
+                  >+</button>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="add-btn"
+                  data-action="add"
+                  data-id="${escapeHTML(product.id)}"
+                >
+                  إضافة
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+
+    }
+
+
+    function changeQuantity(productId, amount) {
+
+      const current = cart[productId] || 0;
+      const next = Math.max(0, current + amount);
+
+      if (next === 0) {
+        delete cart[productId];
+      } else {
+        cart[productId] = next;
+      }
+
+      renderProducts();
+      renderCart();
+
+    }
+
+
+    productsGrid.addEventListener("click", (event) => {
+
+      const button = event.target.closest("button[data-action]");
+
+      if (!button) return;
+
+      const productId = button.dataset.id;
+      const action = button.dataset.action;
+
+      if (action === "plus" || action === "add") {
+        changeQuantity(productId, 1);
+      }
+
+      if (action === "minus") {
+        changeQuantity(productId, -1);
+      }
+
+    });
+
+
+    function renderCart() {
+
+      const selectedProducts = products.filter(
+        (product) => (cart[product.id] || 0) > 0
+      );
+
+      const totalQuantity = selectedProducts.reduce(
+        (sum, product) => sum + cart[product.id],
+        0
+      );
+
+      cartCount.textContent = `${totalQuantity} منتج`;
+
+      sendOrderBtn.disabled = selectedProducts.length === 0;
+
+
+      if (selectedProducts.length === 0) {
+
+        cartItems.innerHTML = `
+          <div class="empty-cart">
+            السلة فارغة، اختر المنتجات أولاً.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      cartItems.innerHTML = selectedProducts.map((product) => {
+
+        const name = escapeHTML(getProductName(product));
+        const quantity = cart[product.id];
+
+        return `
+          <div class="cart-item">
+
+            <div>
+              <div class="cart-item-name">${name}</div>
+              <small>الكمية: ${quantity}</small>
+            </div>
+
+            <button
+              class="remove-btn"
+              type="button"
+              data-remove="${escapeHTML(product.id)}"
+            >
+              حذف
+            </button>
+
+          </div>
+        `;
+
+      }).join("");
+
+    }
+
+
+    cartItems.addEventListener("click", (event) => {
+
+      const button = event.target.closest("[data-remove]");
+
+      if (!button) return;
+
+      delete cart[button.dataset.remove];
+
+      renderProducts();
+      renderCart();
+
+    });
+
+
+    searchInput.addEventListener("input", renderProducts);
+    categoryFilter.addEventListener("change", renderProducts);
+
+
+    sendOrderBtn.addEventListener("click", () => {
+
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const address = document.getElementById("customerAddress").value.trim();
+      const note = document.getElementById("customerNote").value.trim();
+
+
+      if (!name) {
+        alert("يرجى إدخال اسم الزبون.");
+        return;
+      }
+
+      if (!phone) {
+        alert("يرجى إدخال رقم هاتف الزبون.");
+        return;
+      }
+
+
+      const selectedProducts = products.filter(
+        (product) => (cart[product.id] || 0) > 0
+      );
+
+
+      if (selectedProducts.length === 0) {
+        alert("السلة فارغة.");
+        return;
+      }
+
+
+      let message = "السلام عليكم أبو علي\n\n";
+      message += "أرغب بطلب المنتجات التالية:\n\n";
+
+
+      selectedProducts.forEach((product, index) => {
+
+        message += `${index + 1}- ${getProductName(product)} `;
+        message += `— الكمية: ${cart[product.id]}\n`;
+
+      });
+
+
+      message += "\nبيانات الزبون:\n";
+      message += `الاسم: ${name}\n`;
+      message += `رقم الهاتف: ${phone}\n`;
+
+      if (address) {
+        message += `العنوان: ${address}\n`;
+      }
+
+      if (note) {
+        message += `ملاحظات: ${note}\n`;
+      }
+
+      message += "\nشكراً لكم.";
+
+
+      const whatsappURL =
+        "https://wa.me/" +
+        WHATSAPP_NUMBER +
+        "?text=" +
+        encodeURIComponent(message);
+
+
+      window.open(whatsappURL, "_blank");
+
+    });
+
+
+    loadProducts();
+
+  </script>
+
+</body>
+</html>
